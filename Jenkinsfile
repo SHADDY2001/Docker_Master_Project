@@ -5,7 +5,7 @@ pipeline {
     stage('Build Docker Image') {
       steps {
         script {
-          dockerImage = docker.build("shadab100601/Docker-Master-Project")
+          dockerImage = docker.build("shaddy100601/Docker-Master-Project")
         }
       }
     }
