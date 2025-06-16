@@ -2,16 +2,10 @@ pipeline {
   agent any
 
   stages {
-    stage('Clone') {
-      steps {
-        git 'https://github.com/SHADDY2001/docker-master-project.git'
-      }
-    }
-
     stage('Build Docker Image') {
       steps {
         script {
-          dockerImage = docker.build("shaddy100601/docker-master-project")
+          dockerImage = docker.build("shadab100601/Docker-Master-Project")
         }
       }
     }
