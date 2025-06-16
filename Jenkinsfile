@@ -1,33 +1,27 @@
 pipeline {
-  agent {
-    docker { image 'docker:latest' }
-  }
+  agent any
 
   environment {
-    DOCKER_IMAGE = 'shadab100601/docker-master-project'
+    IMAGE_NAME = "shaddy100601/docker-master-project"
   }
 
   stages {
-    stage('Clone') {
+    stage('Checkout Code') {
       steps {
-        git 'https://github.com/SHADDY2001/Docker_Master_Project.git'
+        git branch: 'main', url: 'https://github.com/SHADDY2001/Docker_Master_Project.git'
       }
     }
 
     stage('Build Docker Image') {
       steps {
-        script {
-          dockerImage = docker.build("${DOCKER_IMAGE}")
-        }
+        sh 'docker build -t $IMAGE_NAME .'
       }
     }
 
     stage('Push to Docker Hub') {
       steps {
-        withDockerRegistry([credentialsId: 'dockerhub-creds', url: '']) {
-          script {
-            dockerImage.push()
-          }
+        withDockerRegistry(credentialsId: 'dockerhub-creds', url: '') {
+          sh 'docker push $IMAGE_NAME'
         }
       }
     }
