@@ -6,22 +6,25 @@ pipeline {
   }
 
   stages {
-    stage('Checkout Code') {
+    stage('Clone') {
       steps {
         git branch: 'main', url: 'https://github.com/SHADDY2001/Docker_Master_Project.git'
       }
     }
 
-    stage('Build Docker Image') {
+    stage('Build Image') {
       steps {
         sh 'docker build -t $IMAGE_NAME .'
       }
     }
 
-    stage('Push to Docker Hub') {
+    stage('Login and Push to DockerHub') {
       steps {
-        withDockerRegistry(credentialsId: 'dockerhub-creds', url: '') {
-          sh 'docker push $IMAGE_NAME'
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+          sh '''
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
+            docker push $IMAGE_NAME
+          '''
         }
       }
     }
